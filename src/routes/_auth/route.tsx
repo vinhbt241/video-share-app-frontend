@@ -8,18 +8,33 @@ import { JSX, useEffect } from "react"
 import { useCurrentUserQuery } from "../../queries/user_queries"
 import Loader from "../../components/Loader"
 import Navbar from "../../components/Navbar"
-import { Box } from "@chakra-ui/react"
+import { Box, useToast } from "@chakra-ui/react"
 import useWebSocket, { ReadyState } from "react-use-websocket"
 
 function AuthRoute(): JSX.Element {
   const currentUserQuery = useCurrentUserQuery()
   const currentUser = currentUserQuery.data
   const context = useRouteContext({ from: "/_auth" })
+  const toast = useToast()
   const { sendJsonMessage, readyState } = useWebSocket(
     "ws://localhost:3000/cable",
     {
       onMessage: (event) => {
-        console.log(event.data)
+        const data = JSON.parse(event.data) || {}
+        if (data["identifier"]) {
+          const channel = JSON.parse(data["identifier"])["channel"]
+          if (channel === "VideoChannel" && !!data["message"]) {
+            const message = data["message"]
+
+            toast({
+              title: `New video: ${message["title"]}`,
+              description: `${message["created_by"]} just share a new video!`,
+              status: "success",
+              duration: 10000,
+              isClosable: true,
+            })
+          }
+        }
       },
     },
     context.isAuthenticated
