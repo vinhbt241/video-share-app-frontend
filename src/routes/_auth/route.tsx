@@ -1,9 +1,4 @@
-import {
-  createFileRoute,
-  Navigate,
-  Outlet,
-  useLocation,
-} from "@tanstack/react-router"
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 import { JSX } from "react"
 import { useCurrentUserQuery } from "../../queries/user_queries"
 import Loader from "../../components/Loader"
@@ -13,15 +8,6 @@ import { Box } from "@chakra-ui/react"
 function AuthRoute(): JSX.Element {
   const currentUserQuery = useCurrentUserQuery()
   const currentUser = currentUserQuery.data
-  const location = useLocation()
-
-  if (
-    currentUserQuery.isLoading! &&
-    !currentUser &&
-    location.pathname != "/home"
-  ) {
-    return <Navigate to="/home" />
-  }
 
   return (
     <Loader loading={currentUserQuery.isLoading}>
@@ -39,4 +25,10 @@ function AuthRoute(): JSX.Element {
 
 export const Route = createFileRoute("/_auth")({
   component: AuthRoute,
+  beforeLoad: ({ location, context }) => {
+    console.log(context)
+    if (!context.isAuthenticated && location.pathname != "/home") {
+      throw redirect({ to: "/home" })
+    }
+  },
 })
