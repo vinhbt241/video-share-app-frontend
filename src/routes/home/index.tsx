@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Container } from "@chakra-ui/react"
 import { createFileRoute } from "@tanstack/react-router"
 import { JSX } from "react"
 import Navbar from "../../components/Navbar"
@@ -15,6 +15,7 @@ function Home(): JSX.Element {
         <Box position={"fixed"} top={0} left={0} width={"100vw"}>
           <Navbar currentUser={currentUser} />
         </Box>
+        <Container></Container>
       </Box>
     </Loader>
   )
