@@ -17,5 +17,5 @@ export default function Loader({
       </Box>
     )
   }
-  return <Box minHeight={"100vh"}>{children}</Box>
+  return <Box>{children}</Box>
 }

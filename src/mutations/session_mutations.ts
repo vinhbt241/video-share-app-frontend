@@ -7,21 +7,10 @@ export function useLoginMutation() {
 
   return useMutation({
     mutationFn: (data: ISessionCredentials) => login(data),
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: async (data) => {
       localStorage.setItem("token", data.jwt_token)
       window.location.reload()
-    },
-    onError: () => {
-      console.log("error")
-    },
-    onSettled: async (_, error) => {
-      console.log("settled")
-      if (error) {
-        console.log(error)
-      } else {
-        await queryClient.invalidateQueries({ queryKey: ["current_user"] })
-      }
+      await queryClient.invalidateQueries({ queryKey: ["current_user"] })
     },
   })
 }
@@ -33,14 +22,7 @@ export function useLogoutMutation() {
     mutationFn: async () => {
       localStorage.removeItem("token")
       window.location.reload()
-    },
-    onSettled: async (_, error) => {
-      console.log("settled")
-      if (error) {
-        console.log(error)
-      } else {
-        await queryClient.invalidateQueries({ queryKey: ["current_user"] })
-      }
+      await queryClient.invalidateQueries({ queryKey: ["current_user"] })
     },
   })
 }

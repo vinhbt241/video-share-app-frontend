@@ -1,11 +1,11 @@
-import { Box, Container } from "@chakra-ui/react"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Outlet } from "@tanstack/react-router"
 import { JSX } from "react"
-import Navbar from "../../components/Navbar"
 import { useCurrentUserQuery } from "../../queries/user_queries"
 import Loader from "../../components/Loader"
+import Navbar from "../../components/Navbar"
+import { Box } from "@chakra-ui/react"
 
-function Home(): JSX.Element {
+function AuthRoute(): JSX.Element {
   const currentUserQuery = useCurrentUserQuery()
   const currentUser = currentUserQuery.data
 
@@ -15,12 +15,14 @@ function Home(): JSX.Element {
         <Box position={"fixed"} top={0} left={0} width={"100vw"}>
           <Navbar currentUser={currentUser} />
         </Box>
-        <Container></Container>
+        <Box mt={24}>
+          <Outlet />
+        </Box>
       </Box>
     </Loader>
   )
 }
 
-export const Route = createFileRoute("/home/")({
-  component: Home,
+export const Route = createFileRoute("/_auth")({
+  component: AuthRoute,
 })
