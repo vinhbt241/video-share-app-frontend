@@ -6,5 +6,9 @@ export interface IVideoParams {
 
 export interface IVideo {
   id: string
-  resource_url: string
+  title: string
+  description: string
+  embedded_id: string
+  likes: number
+  created_by: string
 }

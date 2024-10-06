@@ -8,8 +8,7 @@ export async function createUser(data: IUserCredentials) {
 }
 
 export async function getCurrentUser() {
-  const response = await Api.get("users/me").catch((err) => {
-    console.log(err)
+  const response = await Api.get("users/me").catch(() => {
     return null
   })
 

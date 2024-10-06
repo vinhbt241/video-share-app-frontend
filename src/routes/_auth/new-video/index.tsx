@@ -3,16 +3,21 @@ import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
 import { JSX } from "react"
 import { useCreateVideoMutation } from "../../../mutations/video_mutations"
+import { useRedirectAfterSuccessMutation } from "../../../hooks/useRedirectAfterSuccessMutation"
 
 function NewVideo(): JSX.Element {
   const createVideoMutation = useCreateVideoMutation()
+  const createVideoMutate = useRedirectAfterSuccessMutation({
+    mutation: createVideoMutation,
+    navigateTo: "/home",
+  })
 
   const videoForm = useForm({
     defaultValues: {
       resourceUrl: "",
     },
     onSubmit: async ({ value }) => {
-      createVideoMutation.mutate({
+      createVideoMutate({
         video: {
           resource_url: value.resourceUrl,
         },
