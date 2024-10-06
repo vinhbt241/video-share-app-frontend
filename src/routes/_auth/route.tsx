@@ -1,13 +1,40 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
-import { JSX } from "react"
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useRouteContext,
+} from "@tanstack/react-router"
+import { JSX, useEffect } from "react"
 import { useCurrentUserQuery } from "../../queries/user_queries"
 import Loader from "../../components/Loader"
 import Navbar from "../../components/Navbar"
 import { Box } from "@chakra-ui/react"
+import useWebSocket, { ReadyState } from "react-use-websocket"
 
 function AuthRoute(): JSX.Element {
   const currentUserQuery = useCurrentUserQuery()
   const currentUser = currentUserQuery.data
+  const context = useRouteContext({ from: "/_auth" })
+  const { sendJsonMessage, readyState } = useWebSocket(
+    "ws://localhost:3000/cable",
+    {
+      onMessage: (event) => {
+        console.log(event.data)
+      },
+    },
+    context.isAuthenticated
+  )
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        command: "subscribe",
+        identifier: JSON.stringify({
+          channel: "VideoChannel",
+        }),
+      })
+    }
+  }, [readyState, sendJsonMessage])
 
   return (
     <Loader loading={currentUserQuery.isLoading}>
@@ -26,7 +53,6 @@ function AuthRoute(): JSX.Element {
 export const Route = createFileRoute("/_auth")({
   component: AuthRoute,
   beforeLoad: ({ location, context }) => {
-    console.log(context)
     if (!context.isAuthenticated && location.pathname != "/home") {
       throw redirect({ to: "/home" })
     }
