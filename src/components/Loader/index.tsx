@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Spinner } from "@chakra-ui/react"
 import { JSX } from "react"
 
 interface ILoaderProps {
@@ -12,8 +12,14 @@ export default function Loader({
 }: ILoaderProps): JSX.Element {
   if (loading) {
     return (
-      <Box width={"100vw"} height={"100vh"}>
-        Loading...
+      <Box
+        width={"100vw"}
+        height={"100vh"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <Spinner size={"xl"} />
       </Box>
     )
   }
