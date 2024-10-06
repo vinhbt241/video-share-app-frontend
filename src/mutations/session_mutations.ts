@@ -10,9 +10,29 @@ export function useLoginMutation() {
     onSuccess: (data) => {
       console.log(data)
       localStorage.setItem("token", data.jwt_token)
+      window.location.reload()
     },
     onError: () => {
       console.log("error")
+    },
+    onSettled: async (_, error) => {
+      console.log("settled")
+      if (error) {
+        console.log(error)
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["current_user"] })
+      }
+    },
+  })
+}
+
+export function useLogoutMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      localStorage.removeItem("token")
+      window.location.reload()
     },
     onSettled: async (_, error) => {
       console.log("settled")

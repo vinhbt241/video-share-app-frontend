@@ -4,3 +4,8 @@ export interface IUserCredentials {
     password: string
   }
 }
+
+export interface ICurrentUser {
+  email: string
+  id: string
+}

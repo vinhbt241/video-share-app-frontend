@@ -1,13 +1,7 @@
 import { TanStackRouterDevtools } from "@tanstack/router-devtools"
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
+import { Outlet, createRootRoute } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-
-interface IRouterContextProps {
-  currentUser: {
-    email: string
-  } | null
-}
 
 function Root(): JSX.Element {
   return (
@@ -19,6 +13,6 @@ function Root(): JSX.Element {
   )
 }
 
-export const Route = createRootRouteWithContext<IRouterContextProps>()({
+export const Route = createRootRoute({
   component: Root,
 })

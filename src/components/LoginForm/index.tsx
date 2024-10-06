@@ -1,16 +1,9 @@
-import {
-  Button,
-  Container,
-  FormControl,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react"
+import { Button, FormControl, Input, Box } from "@chakra-ui/react"
 import { useForm } from "@tanstack/react-form"
-import { createFileRoute, redirect } from "@tanstack/react-router"
-import { JSX, useEffect } from "react"
+import { JSX } from "react"
 import { useLoginMutation } from "../../mutations/session_mutations"
 
-function Login(): JSX.Element {
+export default function LoginForm(): JSX.Element {
   const loginMutation = useLoginMutation()
 
   const loginForm = useForm({
@@ -28,35 +21,24 @@ function Login(): JSX.Element {
     },
   })
 
-  useEffect(() => {
-    if (loginMutation.isSuccess) {
-      window.location.reload()
-    }
-  }, [loginMutation])
-
   return (
-    <Container
-      height={"100vh"}
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        loginForm.handleSubmit()
+      }}
     >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          loginForm.handleSubmit()
-        }}
-      >
+      <Box display={"flex"} alignItems={"center"} gap={8}>
         <loginForm.Field
           name="email"
           children={(field) => (
             <FormControl>
-              <FormLabel>Email</FormLabel>
               <Input
                 type="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Email"
               />
             </FormControl>
           )}
@@ -65,30 +47,19 @@ function Login(): JSX.Element {
           name="password"
           children={(field) => (
             <FormControl>
-              <FormLabel>Password</FormLabel>
               <Input
                 type="password"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Password"
               />
             </FormControl>
           )}
         />
-        <Button mt={4} colorScheme="teal" type="submit">
-          Submit
+        <Button colorScheme="teal" type="submit" minW={"fit-content"}>
+          Login/Register
         </Button>
-      </form>
-    </Container>
+      </Box>
+    </form>
   )
 }
-
-export const Route = createFileRoute("/login/")({
-  component: Login,
-  beforeLoad({ context, search }) {
-    if (context.currentUser) {
-      throw redirect({
-        to: (search as Record<string, string>).redirect || "/",
-      })
-    }
-  },
-})
