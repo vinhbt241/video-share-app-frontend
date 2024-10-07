@@ -10,12 +10,14 @@ import Loader from "../../components/Loader"
 import Navbar from "../../components/Navbar"
 import { Box, useToast } from "@chakra-ui/react"
 import useWebSocket, { ReadyState } from "react-use-websocket"
+import { useQueryClient } from "@tanstack/react-query"
 
 function AuthRoute(): JSX.Element {
   const currentUserQuery = useCurrentUserQuery()
   const currentUser = currentUserQuery.data
   const context = useRouteContext({ from: "/_auth" })
   const toast = useToast()
+  const queryClient = useQueryClient()
   const { sendJsonMessage, readyState } = useWebSocket(
     "ws://localhost:3000/cable",
     {
@@ -25,7 +27,6 @@ function AuthRoute(): JSX.Element {
           const channel = JSON.parse(data["identifier"])["channel"]
           if (channel === "VideoChannel" && !!data["message"]) {
             const message = data["message"]
-
             toast({
               title: `New video: ${message["title"]}`,
               description: `${message["created_by"]} just share a new video!`,
@@ -33,6 +34,7 @@ function AuthRoute(): JSX.Element {
               duration: 10000,
               isClosable: true,
             })
+            queryClient.invalidateQueries({ queryKey: ["videos"] })
           }
         }
       },
