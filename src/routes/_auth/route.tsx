@@ -19,7 +19,7 @@ function AuthRoute(): JSX.Element {
   const toast = useToast()
   const queryClient = useQueryClient()
   const { sendJsonMessage, readyState } = useWebSocket(
-    "ws://localhost:3000/cable",
+    import.meta.env.VITE_WEBSOCKET_ENDPOINT,
     {
       onMessage: (event) => {
         const data = JSON.parse(event.data) || {}
