@@ -54,6 +54,12 @@ Run the following command to preview the production build:
 ```
 pnpm preview
 ```
+Deploy to firebase:
+```
+# in case you don't have Firebse installed
+pnpm add -g firebase-tools
+firebase deploy
+```
 
 ## Live version
-Check out the [live version of Funny Videos](http://video-share-app-fe.s3-website-ap-southeast-1.amazonaws.com)!
+Check out the [live demo](https://gcp-practice-493903.web.app/home)!
