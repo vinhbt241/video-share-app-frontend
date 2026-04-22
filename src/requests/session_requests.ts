@@ -7,7 +7,6 @@ export async function login(data: ISessionCredentials) {
   )
 
   if (response.status == 404) {
-    console.log("here")
     response = await Api.post("users", {
       user: {
         ...data.session,
